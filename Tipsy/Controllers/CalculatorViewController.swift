@@ -18,14 +18,17 @@ class CalculatorViewController: UIViewController {
     
     var totalBill = ""
     var numberOfPeople = 0
+    var tip = 0
     
     func calculateTip() {
         if let billTextField = billTextField.text {
             if zeroPctButton.isSelected == true {
                 totalBill = billTextField
             } else if tenPctButton.isSelected == true {
+                tip = 0
                 totalBill = String(format: "%.2f", (Double(billTextField)! * 1.1) / Double(numberOfPeople))
             } else if twentyPctButton.isSelected == true {
+                tip = 20
                 totalBill = String(format: "%.2f", (Double(billTextField)! * 1.2) / Double(numberOfPeople))
             }
         }
@@ -56,6 +59,16 @@ class CalculatorViewController: UIViewController {
         guard splitNumberLabel.text != nil else { return }
         calculateTip()
         print(totalBill)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ResultsSegue" {
+            guard let destionationVC = segue.destination as? ResultsViewController else { return }
+            
+            destionationVC.totalResult = totalBill
+            destionationVC.numberOfPeople = numberOfPeople
+            destionationVC.tip = tip
+        }
     }
 }
 
